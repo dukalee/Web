@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<a style="float:right" href={% url "articles:create" %}>글 생성하기</a>
+<h2>Article List Page</h2>
+
+{% if user.is_authenticated %}
+  <h3>Hello, {{ user }}</h3>
+  <a href={% url 'accounts:logout' %}>로그아웃</a>
+{% else %}
+  <a href={% url 'accounts:signup' %}>회원가입</a>
+  <a href={% url 'accounts:login' %}>로그인</a>
+{% endif %}
+
+<hr/>
+
+{% for article in articles %}
+  <p>{{ article.id }} : {{ article.title }}</p>
+  <p>내용 : {{ article.content|truncatechars:20 }}</p>
+  <p>작성자 : {{ article.author }}</p>
+
+  <a href={% url 'articles:detail' article.pk %}>상세보기</a>
+  {% if user == article.author %}
+    <a href={% url 'articles:delete' article.pk %}>삭제하기</a>
+    <a href={% url 'articles:update' article.pk %}>수정하기</a>
+  {% endif %}
+  <hr/>
+{% endfor %}
+
+{% endblock content %}
